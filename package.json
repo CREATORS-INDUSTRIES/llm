@@ -11,6 +11,7 @@
     "node-llama-cpp"
   ],
   "license": "MIT",
+  "repository": "github:CREATORS-INDUSTRIES/llm",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
