@@ -3,6 +3,8 @@ import { z } from 'zod'
 
 export type LoadOptions = {
   system?: string
+  // false reads every weight into memory before load resolves, so the first prompt doesn't wait on disk.
+  lazy?: boolean
 }
 
 export type PromptOptions = {
@@ -25,7 +27,7 @@ export type Model = {
 export async function load(modelPath: string, opts: LoadOptions = {}): Promise<Model> {
   // Failures still surface as thrown errors; the logs are llama.cpp's internals.
   const llama = await getLlama({ logLevel: LlamaLogLevel.disabled, progressLogs: false })
-  const model = await llama.loadModel({ modelPath })
+  const model = await llama.loadModel({ modelPath, useMmap: opts.lazy === false ? false : 'auto' })
   const context = await model.createContext()
   const session = new LlamaChatSession({ contextSequence: context.getSequence(), systemPrompt: opts.system })
   let tokenCount = 0

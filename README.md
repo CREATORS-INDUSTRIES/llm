@@ -28,13 +28,13 @@ city.population // number
 ```
 
 ```
-load(modelPath, { system? })                        -> Promise<Model>
+load(modelPath, { system?, lazy? })                 -> Promise<Model>
 model.prompt(text, { onToken?, signal? })           -> Promise<string>
 model.prompt(text, { schema, onToken?, signal? })   -> Promise<T>
 model.getTokenCount()                               -> number
 model.unload()                                      -> Promise<void>
 ```
 
-`onToken` receives the reply's text as it's generated. `getTokenCount` returns the tokens generated since load, reasoning included.
+`lazy` (default `true`) reads the model from disk as it's used; `false` loads it whole into memory before `load` returns, so the first prompt answers at full speed. `onToken` receives the reply's text as it's generated. `getTokenCount` returns the tokens generated since load, reasoning included.
 
 Node 20+. MIT. CREATORS © 2026
