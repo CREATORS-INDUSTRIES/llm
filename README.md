@@ -1,8 +1,8 @@
-# @crtrs/llm
+![@crtrs/llm](assets/crtrs-llm.png)
 
 The toolkit for apps that think locally.
 
-@crtrs/llm runs AI models on your own machine, from Node. Point to a GGUF file on disk, and talk to it.
+Run LLMs on your own machine, from Node. Point to a GGUF file on disk, and talk to it.
 
 ```
 npm install @crtrs/llm
