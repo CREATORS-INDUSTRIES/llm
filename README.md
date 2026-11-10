@@ -35,18 +35,33 @@ await chat.prompt('My name is Ana.')
 await chat.prompt('What is my name?') // Ana
 ```
 
+Give the model functions to call. It decides when, and answers from what they return.
+
+```ts
+import { load, tool } from '@crtrs/llm'
+
+const weather = tool({
+  description: 'Current weather for a city',
+  params: z.object({ city: z.string() }),
+  run: async ({ city }) => fetchWeather(city), // city: string
+})
+
+await ai.prompt('Weather in Paris?', { tools: { weather } })
+```
+
 ```
 load(modelPath, { system?, lazy? })                 -> Promise<Model>
-model.prompt(text, { onToken?, signal? })           -> Promise<string>
+model.prompt(text, { tools?, onToken?, signal? })   -> Promise<string>
 model.prompt(text, { schema, onToken?, signal? })   -> Promise<T>
 model.session({ system? })                          -> Session
-session.prompt(text, { onToken?, signal? })         -> Promise<string>
+session.prompt(text, { tools?, onToken?, signal? }) -> Promise<string>
 session.prompt(text, { schema, onToken?, signal? }) -> Promise<T>
 session.reset()                                     -> void
 model.getTokenCount()                               -> number
 model.unload()                                      -> Promise<void>
+tool({ description?, params?, run })                -> Tool
 ```
 
-`lazy` (default `true`) reads the model from disk as it's used; `false` loads it whole into memory before `load` returns, so the first prompt answers at full speed. `onToken` receives the reply's text as it's generated. `getTokenCount` returns the tokens generated since load, reasoning included. A session takes `load`'s system prompt unless given its own; `reset` clears its history and keeps that system prompt.
+`lazy` (default `true`) reads the model from disk as it's used; `false` loads it whole into memory before `load` returns, so the first prompt answers at full speed. `onToken` receives the reply's text as it's generated. `getTokenCount` returns the tokens generated since load, reasoning included. A session takes `load`'s system prompt unless given its own; `reset` clears its history and keeps that system prompt. A tool's `params` is a zod schema and the model reads back whatever `run` returns; `tools` and `schema` can't share a prompt.
 
 Node 20+. MIT. CREATORS © 2026
