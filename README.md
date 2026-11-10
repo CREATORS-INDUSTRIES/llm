@@ -27,15 +27,25 @@ const city = await ai.prompt('Capital of France?', {
 city.population // number
 ```
 
+`ai.prompt` remembers nothing, so loops over many inputs never fill the context. For a conversation, open a session: each of its prompts sees the ones before it.
+
+```ts
+const chat = ai.session()
+await chat.prompt('My name is Ana.')
+await chat.prompt('What is my name?') // Ana
+```
+
 ```
 load(modelPath, { system?, lazy? })                 -> Promise<Model>
 model.prompt(text, { onToken?, signal? })           -> Promise<string>
 model.prompt(text, { schema, onToken?, signal? })   -> Promise<T>
+model.session({ system? })                          -> Session
+session.prompt(text, { onToken?, signal? })         -> Promise<string>
+session.prompt(text, { schema, onToken?, signal? }) -> Promise<T>
 model.getTokenCount()                               -> number
-model.reset()                                       -> void
 model.unload()                                      -> Promise<void>
 ```
 
-`lazy` (default `true`) reads the model from disk as it's used; `false` loads it whole into memory before `load` returns, so the first prompt answers at full speed. `onToken` receives the reply's text as it's generated. `getTokenCount` returns the tokens generated since load, reasoning included. Each prompt remembers the ones before it; `reset` clears that context (keeps the system prompt).
+`lazy` (default `true`) reads the model from disk as it's used; `false` loads it whole into memory before `load` returns, so the first prompt answers at full speed. `onToken` receives the reply's text as it's generated. `getTokenCount` returns the tokens generated since load, reasoning included. A session takes `load`'s system prompt unless given its own; to start over, open a new one.
 
 Node 20+. MIT. CREATORS © 2026

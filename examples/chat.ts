@@ -5,13 +5,14 @@ import { load } from '../dist/index.js'
 
 const ai = await load(process.argv[2]!, { system: 'Answer briefly.' })
 
+const chat = ai.session()
 const rl = createInterface({ input, output })
 rl.on('close', () => void ai.unload())
 output.write('> ')
 
 for await (const line of rl) {
   if (line.trim()) {
-    await ai.prompt(line, { onToken: (t) => output.write(t) })
+    await chat.prompt(line, { onToken: (t) => output.write(t) })
     output.write('\n')
   }
   output.write('> ')
