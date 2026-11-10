@@ -21,6 +21,8 @@ export type Model = {
   prompt(text: string, opts?: PromptOptions): Promise<string>
   // Tokens generated since load, including reasoning that onToken never shows.
   getTokenCount(): number
+  // Forgets earlier prompts; the system prompt stays.
+  reset(): void
   unload(): Promise<void>
 }
 
@@ -53,6 +55,7 @@ export async function load(modelPath: string, opts: LoadOptions = {}): Promise<M
   return {
     prompt: prompt as Model['prompt'],
     getTokenCount: () => tokenCount,
+    reset: () => session.resetChatHistory(),
     unload: () => llama.dispose(),
   }
 }
