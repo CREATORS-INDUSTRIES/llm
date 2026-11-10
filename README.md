@@ -42,10 +42,11 @@ model.prompt(text, { schema, onToken?, signal? })   -> Promise<T>
 model.session({ system? })                          -> Session
 session.prompt(text, { onToken?, signal? })         -> Promise<string>
 session.prompt(text, { schema, onToken?, signal? }) -> Promise<T>
+session.reset()                                     -> void
 model.getTokenCount()                               -> number
 model.unload()                                      -> Promise<void>
 ```
 
-`lazy` (default `true`) reads the model from disk as it's used; `false` loads it whole into memory before `load` returns, so the first prompt answers at full speed. `onToken` receives the reply's text as it's generated. `getTokenCount` returns the tokens generated since load, reasoning included. A session takes `load`'s system prompt unless given its own; to start over, open a new one.
+`lazy` (default `true`) reads the model from disk as it's used; `false` loads it whole into memory before `load` returns, so the first prompt answers at full speed. `onToken` receives the reply's text as it's generated. `getTokenCount` returns the tokens generated since load, reasoning included. A session takes `load`'s system prompt unless given its own; `reset` clears its history and keeps that system prompt.
 
 Node 20+. MIT. CREATORS © 2026

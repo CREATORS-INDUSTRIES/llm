@@ -25,6 +25,8 @@ export type Session = {
   // Sees every earlier prompt of this session, and its reply.
   prompt<T>(text: string, opts: SchemaPromptOptions<T>): Promise<T>
   prompt(text: string, opts?: PromptOptions): Promise<string>
+  // Forgets them; the system prompt stays.
+  reset(): void
 }
 
 export type Model = {
@@ -71,7 +73,12 @@ export async function load(modelPath: string, opts: LoadOptions = {}): Promise<M
         history = chat.getChatHistory()
         return reply
       })
-    return { prompt }
+    // Queued, or a prompt still generating would write its reply back over the reset.
+    const reset = () =>
+      void oneAtATime(async () => {
+        history = emptyHistory(system)
+      })
+    return { prompt, reset }
   }
 
   async function generate(text: string, { onToken, signal, schema }: AnyPromptOptions) {
