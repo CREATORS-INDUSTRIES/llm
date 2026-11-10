@@ -1,6 +1,6 @@
 {
   "name": "@crtrs/llm",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Run local AI models from Node with a small, comfortable API",
   "keywords": [
     "llm",
